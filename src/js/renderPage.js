@@ -76,7 +76,7 @@ function onSearchError() {
 }
 
 function onReachEndError() {
-  Notiflix.Notify.info("We're sorry, but you've reached the end of search results.");
+  Notiflix.Notify.warning("We're sorry, but you've reached the end of search results.");
 }
 
 function clearPage() {
