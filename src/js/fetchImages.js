@@ -1,29 +1,49 @@
-// const axios = require('axios');
+import axios from 'axios';
 
-const BASE_URL = 'https://pixabay.com/api/';
-const KEY = '22569115-02a432c6c1c62bbb3a59801b7';
-const ITEMS_PER_PAGE = 40;
+export default class ImagesApiService {
+  constructor() {
+    this.searchQuery = '';
+    this.page = 1;
+    this.itemsPerPage = 40;
+  }
 
-function fetchImages(userInput) {
-  const url = `${BASE_URL}/?key=${KEY}&q=${userInput}&image_type=photo&orientation=horizontal&safesearch=true&page=1&per_page=${ITEMS_PER_PAGE}`;
+  fetchImages() {
+    const BASE_URL = 'https://pixabay.com/api/';
+    const API_KEY = '22569115-02a432c6c1c62bbb3a59801b7';
 
-  return fetch(url).then(response => {
-    if (!response.ok) {
-      throw new Error(response.status);
-    }
-    // console.log(response);
-    return response.json();
-  });
+    const url = `${BASE_URL}/?key=${API_KEY}&q=${this.searchQuery}&image_type=photo&orientation=horizontal&safesearch=true&page=${this.page}&per_page=${this.itemsPerPage}`;
+    // Вариант через fetch()
+    // return fetch(url).then(response => {
+    //   if (!response.ok) {
+    //     throw new Error(response.status);
+    //   }
+    //   this.incrementPage();
+    //   return response.json();
+    // });
+
+    return axios
+      .get(url)
+      .then(response => {
+        this.incrementPage();
+        console.log(response.data.totalHits);
+        return response.data;
+      })
+      .catch(error => console.log(error.message));
+  }
+
+  resetPage() {
+    this.page = 1;
+  }
+
+  incrementPage() {
+    this.page += 1;
+  }
+
+  get query() {
+    return this.searchQuery;
+  }
+
+  set query(newQuery) {
+    this.searchQuery = newQuery;
+  }
 }
-
-// async function fetchImages(userInput) {
-//   try {
-//     const url = `${BASE_URL}/?key=${KEY}&q=${userInput}&image_type=photo&orientation=horizontal&safesearch=true`;
-//     const response = await axios.get(url);
-//     console.log(response);
-//   } catch (error) {
-//     console.error(error);
-//   }
-// }
-
-export default { fetchImages };

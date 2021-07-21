@@ -1,23 +1,33 @@
 .gallery {
   margin-top: 15px;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   flex-wrap: wrap;
 }
 
 .photo-card {
   margin: 15px 0;
-  border: 1px solid rgb(144, 144, 144);
+  border: 1px solid rgba(144, 144, 144, 0.541);
+  border-radius: 3px;
+  box-shadow: -1px 2px 13px -6px #000;
 
   width: 340px;
-  height: 320px;
+  height: 280px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
+
 .photo-card img {
-  width: 100%;
+  background-color: #000;
   height: 70%;
+
+  object-fit: cover;
+  object-position: 50% 50%;
 }
 
 .info {
+  padding-bottom: 5px;
   display: flex;
   justify-content: center;
 }
