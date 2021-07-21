@@ -1,6 +1,6 @@
 import refs from './refs';
 import Notiflix from 'notiflix';
-Notiflix.Notify.init({ position: 'right-bottom' });
+// Notiflix.Notify.init({ position: 'right-bottom' });
 
 import ImagesApiService from './fetchImages';
 import imgCardTpl from '../partials/card.hbs';
