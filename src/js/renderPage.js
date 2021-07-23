@@ -15,6 +15,10 @@ const imagesApiService = new ImagesApiService();
 // Прячу кнопку дополнительной загрузки изображений
 hideLoadMoreBtn();
 
+// Возможность выбрать оринтацию изображений
+refs.galleryContainer.classList.add('horizontal');
+changeImgOrientation();
+
 // Создаю слушателей событий
 refs.searchForm.addEventListener('submit', onSubmitBtnPush);
 refs.loadMoreBtn.addEventListener('click', onLoadMoreBtnPush);
@@ -76,7 +80,22 @@ function onLoadMoreBtnPush(e) {
       onReachEndError();
       hideLoadMoreBtn();
     }
-    return renderPage(images);
+    renderPage(images);
+    // Реализация плавного скрола
+    const { height: cardHeight } = document
+      .querySelector('.gallery')
+      .firstElementChild.getBoundingClientRect();
+    if (refs.galleryContainer.classList.contains('horizontal')) {
+      window.scrollBy({
+        top: cardHeight * 2.5,
+        behavior: 'smooth',
+      });
+    } else if (refs.galleryContainer.classList.contains('vertical')) {
+      window.scrollBy({
+        top: cardHeight * 1.65,
+        behavior: 'smooth',
+      });
+    }
   });
 }
 
@@ -85,6 +104,7 @@ function renderPage(items) {
   const markup = imgCardTpl(items.hits);
 
   refs.galleryContainer.insertAdjacentHTML('beforeend', markup);
+
   lightbox.refresh();
 }
 
@@ -100,7 +120,7 @@ function onSearchError() {
 
 // Уведомление когда закончились результаты
 function onReachEndError() {
-  Notiflix.Notify.warning("We're sorry, but you've reached the end of search results.");
+  Notiflix.Notify.info("We're sorry, but you've reached the end of search results.");
 }
 
 // Очистка страницы
@@ -120,5 +140,32 @@ function showLoadMoreBtn() {
 
 // Увдомление с количеством найденых результатов
 function showNumberOfImages(items) {
-  Notiflix.Notify.success(`Hooray! We found ${items} images.`);
+  if (items > 0) {
+    Notiflix.Notify.success(`Hooray! We found ${items} images.`);
+  }
+}
+
+function changeImgOrientation() {
+  const Orientation = {
+    VERTICAL: 'vertical',
+    HORIZONTAL: 'horizontal',
+  };
+
+  const toggle = document.querySelector('#orientation-switch-toggle');
+  toggle.addEventListener('change', onToggleChange);
+
+  function onToggleChange() {
+    let chkbxValue = toggle.checked;
+    if (chkbxValue) {
+      imagesApiService.orientation = Orientation.VERTICAL;
+      refs.galleryContainer.classList.remove('horizontal');
+      refs.galleryContainer.classList.add('vertical');
+      Notiflix.Notify.success(`Vertical orientation activated`);
+    } else {
+      imagesApiService.orientation = Orientation.HORIZONTAL;
+      refs.galleryContainer.classList.add('horizontal');
+      refs.galleryContainer.classList.remove('vertical');
+      Notiflix.Notify.success(`Horizontal orientation activated`);
+    }
+  }
 }

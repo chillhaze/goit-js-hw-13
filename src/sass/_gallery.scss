@@ -6,16 +6,23 @@
 }
 
 .photo-card {
-  margin: 15px 0;
+  margin: 15px 5px;
   border: 1px solid rgba(144, 144, 144, 0.541);
   border-radius: 3px;
   box-shadow: -1px 2px 13px -6px #000;
 
-  width: 340px;
-  height: 280px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+}
+
+.vertical a {
+  width: 350px;
+  height: 470px;
+}
+.horizontal a {
+  width: 340px;
+  height: 280px;
 }
 
 .photo-card img {
@@ -24,6 +31,8 @@
 
   object-fit: cover;
   object-position: 50% 50%;
+
+  overflow: hidden;
 }
 
 .info {
