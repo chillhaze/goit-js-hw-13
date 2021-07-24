@@ -1,7 +1,8 @@
 .toolbar {
   display: flex;
+  flex-direction: column;
   justify-content: flex-end;
-  padding: 6px 20px;
+  padding: 2px 20px 4px;
 
   position: absolute;
   top: 10px;
@@ -13,6 +14,11 @@
   position: fixed;
 
   box-shadow: 0px 0px 20px -4px #020202;
+}
+
+.toolbar-subtitle {
+  font-size: 12px;
+  line-height: 1;
 }
 
 /* orientation SWITCH */
@@ -84,7 +90,8 @@
 }
 
 .orientation-switch__toggle:checked + .orientation-switch__track {
-  background-color: #d3d3d4;
+  // background-color: #d3d3d4;
+  background-color: #3871c7;
 }
 
 .orientation-switch__toggle:checked ~ .orientation-switch__marker {
@@ -93,5 +100,5 @@
 
 .orientation-switch__toggle:focus + .orientation-switch__track,
 .orientation-switch__toggle:active + .orientation-switch__track {
-  box-shadow: 0 0 0 3px #2196f3;
+  box-shadow: 0 0 1px 1px #32c682;
 }
