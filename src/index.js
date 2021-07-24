@@ -1,6 +1,5 @@
 import '../node_modules/modern-normalize/modern-normalize.css';
 import './sass/main.scss';
-// import './js/renderPage';
 
 import refs from './js/refs';
 import Notiflix from 'notiflix';
@@ -27,6 +26,57 @@ changeImgOrientation();
 refs.searchForm.addEventListener('submit', onSubmitBtnPush);
 refs.loadMoreBtn.addEventListener('click', onLoadMoreBtnPush);
 
+// Функция по отправке формы через промис, без async/await
+// ++++++++++++++++++++++++++++++++++++++++++++++++
+// function onSubmitBtnPush(e) {
+//   e.preventDefault();
+
+//   clearPage();
+//   hideLoadMoreBtn();
+
+//   // Получаю значенние ввода
+//   const form = e.currentTarget;
+//   imagesApiService.query = form.elements.searchQuery.value.trim();
+//   imagesApiService.resetPage();
+
+//   // Проверка на ввод пустой строки в поле поиска
+//   if (imagesApiService.searchQuery !== '') {
+//     // Получаю данные для рендера разметки
+//     imagesApiService
+//       .fetchImages()
+//       .then(images => {
+//         // Вызов оповещения с количеством найденых картинок
+//         showNumberOfImages(images.totalHits);
+
+//         if (images.totalHits < 1) {
+//           onSearchError();
+//           return;
+
+//           // Проверка на количество изображений
+//         } else if (images.totalHits <= imagesApiService.itemsPerPage) {
+//           onReachEndError();
+//           hideLoadMoreBtn();
+//           renderPage(images);
+//           return;
+//         }
+//         // Делаю кнопку загрузки дополнительных изображений видимой
+//         showLoadMoreBtn();
+
+//         // Рендер разметки
+//         return renderPage(images);
+//       })
+//       .catch(err => {
+//         // Отображение ошибки
+//         onSearchError(err);
+//       })
+//       // Сброс поля формы до начального значения
+//       .finally(() => form.reset());
+//   } else {
+//     clearPage();
+//     onSearchError();
+//   }
+// }
+// ++++++++++++++++++++++++++++++++++++++++++++++++++++
 // Функция по отправке формы
 function onSubmitBtnPush(e) {
   e.preventDefault();
@@ -42,9 +92,9 @@ function onSubmitBtnPush(e) {
   // Проверка на ввод пустой строки в поле поиска
   if (imagesApiService.searchQuery !== '') {
     // Получаю данные для рендера разметки
-    imagesApiService
-      .fetchImages()
-      .then(images => {
+    const doRequest = async () => {
+      try {
+        const images = await imagesApiService.fetchImages();
         // Вызов оповещения с количеством найденых картинок
         showNumberOfImages(images.totalHits);
 
@@ -59,18 +109,21 @@ function onSubmitBtnPush(e) {
           renderPage(images);
           return;
         }
+
         // Делаю кнопку загрузки дополнительных изображений видимой
         showLoadMoreBtn();
 
         // Рендер разметки
         return renderPage(images);
-      })
-      .catch(err => {
-        // Отображение ошибки
-        onSearchError(err);
-      })
-      // Сброс поля формы до начального значения
-      .finally(() => form.reset());
+      } catch (error) {
+        onSearchError(error);
+        // Сброс поля формы до начального значения
+      } finally {
+        form.reset();
+      }
+    };
+
+    return doRequest();
   } else {
     clearPage();
     onSearchError();
